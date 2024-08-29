@@ -13,7 +13,7 @@ export default function Home() {
       <br />
       <a href="/profile">Profile</a>
       <br />
-      <a href="/lines">Lines</a>
+      <a href="/gifts">Gifts</a>
     </div>
   );
 }

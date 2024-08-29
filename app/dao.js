@@ -1,24 +1,24 @@
 
-//----  LINES
+//----  GIFTS
 
-export async function getLines(access_token) {
+export async function getGifts(access_token) {
 	const query = `
 		query {
-  			lines {
+  			gifts {
 				id
-    			name
+    			title
   			}
 		}
 	`;
 
 	const response = await fetchHasura(query, access_token);
-	return await response.data.lines;
+	return await response.data.gifts;
 }
 
-export async function removeLine(id, access_token) {
+export async function removeGift(id, access_token) {
 	const query = `
 		mutation {
-			delete_lines_by_pk(id: ${id})
+			delete_gifts_by_pk(id: ${id})
 		}
 	`;
 
@@ -26,10 +26,10 @@ export async function removeLine(id, access_token) {
 	return await response.data;
 }
 
-export async function saveLine(name, access_token) {
+export async function saveGift(title, access_token) {
 	const query = `
 		mutation {
-			insert_lines(objects: {name: "${name}"}) {
+			insert_gifts(objects: {title: "${title}"}) {
 				returning {
 					id
 				}
