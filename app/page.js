@@ -8,12 +8,14 @@ export default function Home() {
       {!session ? (
         <a href="/api/auth/login">Login</a>
       ) : (
-        <a href="/api/auth//logout">Logout</a>
+        <a href="/api/auth/logout">Logout</a>
       )}
       <br />
       <a href="/profile">Profile</a>
       <br />
       <a href="/gifts">Gifts</a>
+      <br />
+      <a href="/friends">Friends</a>
     </div>
   );
 }

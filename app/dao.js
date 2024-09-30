@@ -1,3 +1,52 @@
+//----  FRIEND_INVITATIONS
+
+export async function saveFriendInvitation(sender_id, receiver_id, access_token) {
+	const query = `
+		mutation {
+			insert_friend_invitations(objects: {sender_id: "${sender_id}", receiver_id: "${receiver_id}"}) { 
+				returning {
+					id
+				}
+			}
+		}
+    `;
+
+	console.log('query :>> ', query);
+	const response = await fetchHasura(query, access_token);
+	return await response;
+}
+
+export async function approveFriendInvitation(sender_id, receiver_id, access_token) {
+	const query = `
+		mutation {
+  			update_friend_invitations(where: {sender_id: {_eq: "${sender_id}"}, receiver_id: {_eq: "${receiver_id}"}}, _set: {status: "APPROVED"}) { 
+				returning {
+					id
+				}
+			}
+		}
+    `;
+
+	console.log('query :>> ', query);
+	const response = await fetchHasura(query, access_token);
+	return await response;
+}
+
+//----  USERS
+
+export async function getUsers(access_token) {
+	const query = `
+		query {
+  			users {
+				userId
+    			userName
+  			}
+		}
+	`;
+
+	const response = await fetchHasura(query, access_token);
+	return await response.data.users;
+}
 
 //----  GIFTS
 
