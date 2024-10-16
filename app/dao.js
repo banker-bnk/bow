@@ -1,3 +1,5 @@
+import { sql } from "@vercel/postgres";
+
 //----  FRIEND_INVITATIONS
 
 export async function saveFriendInvitation(sender_id, receiver_id, access_token) {
@@ -33,6 +35,40 @@ export async function approveFriendInvitation(sender_id, receiver_id, access_tok
 }
 
 //----  USERS
+
+export async function getCalendar(user) {
+
+	const { rows } = await sql`
+	SELECT 
+		TO_CHAR(u.birthday, 'Month') AS birthday_month_name,
+		u.*
+	FROM 
+		public.users u
+	JOIN 
+		public.friends f 
+		ON u."userId" = f."friend_id" OR u."userId" = f."user_id"
+	WHERE 
+		(f."user_id" = ${user} OR f."friend_id" = ${user})
+		AND u."userId" != ${user}
+		AND u.birthday IS NOT NULL
+	GROUP BY 
+		u.birthday, u."userId"
+	ORDER BY 
+		EXTRACT(MONTH FROM u.birthday);
+	`;
+
+	const groupedData = rows.reduce((acc, user) => {
+		const monthName = user.birthday_month_name.trim();
+		user.birthday_month_name = monthName;
+		if (!acc[monthName]) {
+		  acc[monthName] = [];
+		}
+		acc[monthName].push(user);
+		return acc;
+	  }, {});
+
+	return groupedData;
+}
 
 export async function getUsers(access_token) {
 	const query = `
