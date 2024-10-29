@@ -6,8 +6,8 @@ export const GET = withApiAuthRequired(async function handle(request) {
     const session = await getSession();
 
     const { searchParams } = new URL(request.url);
-    const receiver_id = searchParams.get('receiver_id');
-    const sender_id = session.user.sub;
+    const sender_id = searchParams.get('sender_id');
+    const receiver_id = session.user.sub;
 
     const respone = await approveFriendInvitation(sender_id, receiver_id, accessToken);
     return new Response(JSON.stringify(respone));

@@ -2,6 +2,23 @@ import { sql } from "@vercel/postgres";
 
 //----  FRIEND_INVITATIONS
 
+export async function getFriendInvitations (access_token) {
+	const query = `
+		query {
+			friend_invitations {
+				id
+			    receiver_id
+    			sender_id
+			}
+		}
+    `;
+
+	const response = await fetchHasura(query, access_token);
+
+	console.log('response :>> ', response);
+	return await response.data.friend_invitations;
+}
+
 export async function saveFriendInvitation(sender_id, receiver_id, access_token) {
 	const query = `
 		mutation {
@@ -32,6 +49,39 @@ export async function approveFriendInvitation(sender_id, receiver_id, access_tok
 	console.log('query :>> ', query);
 	const response = await fetchHasura(query, access_token);
 	return await response;
+}
+
+//----  FRIENDS
+export async function getUsersNotFriends (user) {
+
+	const { rows } = await sql`
+		select * 
+		from users u
+		where not exists 
+		(select *
+		from friends f
+		where (u."userId" = f.user_id or u."userId" = f.friend_id)
+		and (f.user_id = ${user} or f.friend_id = ${user}))
+		and u."userId" != ${user}
+	`;
+
+	return rows;
+}
+
+export async function getFriends (user) {
+
+	const { rows } = await sql`
+		select * 
+		from users u
+		where exists 
+		(select *
+		from friends f
+		where (u."userId" = f.user_id or u."userId" = f.friend_id)
+		and (f.user_id = ${user} or f.friend_id = ${user})
+		and u."userId" != ${user})
+	`;
+
+	return rows;
 }
 
 //----  USERS
