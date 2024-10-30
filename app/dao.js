@@ -84,6 +84,7 @@ export async function getFriends (user) {
 	return rows;
 }
 
+
 //----  USERS
 
 export async function getCalendar(user) {
@@ -134,6 +135,27 @@ export async function getUsers(access_token) {
 	return await response.data.users;
 }
 
+export async function getUserById(userId, access_token) {
+	
+	const query = `
+		query {
+			users_by_pk(userId: "${userId}") {
+				userName
+				birthday
+				gifts(order_by: { created_at: desc }, limit: 1) {
+					id
+					title
+					price
+					image
+				}
+			}
+		}
+	`;
+
+	const response = await fetchHasura(query, access_token);
+	return await response.data.users_by_pk;
+}
+
 //----  GIFTS
 
 export async function getGifts(access_token) {
@@ -142,6 +164,7 @@ export async function getGifts(access_token) {
   			gifts {
 				id
     			title
+				price
   			}
 		}
 	`;

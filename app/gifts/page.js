@@ -12,6 +12,7 @@ export default withPageAuthRequired(async function Lines() {
         <div key={gift.id}>
           <h3>{gift.id}</h3>
           <p>Name: {gift.title}</p>
+          <p>Price: {gift.price}</p>
         </div>
       ))}
     </div>

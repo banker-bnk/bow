@@ -1,18 +1,17 @@
 // app/profile/page.js
-import { withPageAuthRequired, getAccessToken, getSession } from '@auth0/nextjs-auth0';
+import { withPageAuthRequired, getSession } from '@auth0/nextjs-auth0';
 import { getFriends } from '../dao';
 
 export default withPageAuthRequired(async function Friends() {
-	const { accessToken } = await getAccessToken();
   const { user } = await getSession();
-  const users = await getFriends(user.sub);
+  const friends = await getFriends(user.sub);
   
   return (
     <div>
-      {users.map(user => (
-        <div key={user.userId}>
-          <p>Id: {user.userId}</p>
-          <p>Name: {user.userName}</p>
+      {friends.map(friend => (
+        <div key={friend.userId}>
+          <a href={'/friends/' + friend.userId}>Id: Id: {friend.userId}</a>
+          <p>Name: {friend.userName}</p>
           <hr/>
         </div>
       ))}
