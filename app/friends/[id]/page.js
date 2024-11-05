@@ -1,6 +1,7 @@
 // app/profile/page.js
 import { withPageAuthRequired, getAccessToken } from "@auth0/nextjs-auth0";
 import { getUserById } from "../../dao";
+import { PaymentForm } from "@/app/components/paymentForm";
 
 export default withPageAuthRequired(
   async function Lines({ params }) {
@@ -18,6 +19,11 @@ export default withPageAuthRequired(
         <p>{friend.gifts[0]?.title}</p>
         <p>${friend.gifts[0]?.price}</p>
         <img src={friend.gifts[0]?.image} />
+
+        <PaymentForm
+          productName={friend.gifts[0]?.title}
+          giftId={friend.gifts[0]?.id}
+        />
       </div>
     );
   },
