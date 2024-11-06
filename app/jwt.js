@@ -13,14 +13,18 @@ function getKey(header, callback) {
   });
 }
 
-// Function to verify the token
-export function verifyAuth0Token(request) {
+export function getToken (request) {
   const authHeader = request.headers.get('authorization')
   
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return null;
   }
-  const token = authHeader.split(' ')[1];
+  return authHeader.split(' ')[1];
+}
+
+// Function to verify the token
+export function verifyAuth0Token(request) {
+  const token = getToken(request);
 
   return new Promise((resolve, reject) => {
     jwt.verify(
