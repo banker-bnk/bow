@@ -5,10 +5,12 @@ const client = new MercadoPagoConfig({
 });
 
 const getPaymentInfo = (payment) => {
-  const { id, unit_price, currency_id, metadata, date_created } = payment;
+  const { payer, additional_info, currency_id, metadata, date_created } =
+    payment;
+  const { id: gift_id, unit_price } = additional_info.items[0];
   return {
-    id: "",
-    gift_id: id,
+    id: payer.id,
+    gift_id,
     user_id: metadata.user_id,
     amount: unit_price,
     currency: currency_id,
@@ -25,12 +27,13 @@ export const POST = async (request) => {
 
     // TODO: create call to database
 
-    return new Response(JSON.stringify(paymentInfo, 2, null), {
+    return new Response(JSON.stringify({ success: true }), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
     console.log(`Error: ${error}`);
-    throw error;
+    return new Response(JSON.stringify({ success: false }), {
+      status: 500,
+    });
   }
 };

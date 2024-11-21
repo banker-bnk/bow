@@ -1,3 +1,4 @@
+import { APP_SCHEMA, BACK_URL } from "@/app/constants";
 import { MercadoPagoConfig, Preference } from "mercadopago";
 
 const mercadoPago = new MercadoPagoConfig({
@@ -21,10 +22,16 @@ export const preferenceBuilder = (preferenceDraft) => {
       },
       operation_type: "regular_payment",
       back_urls: {
-        success: process.env.APP_HOST_URL,
-        failure: process.env.APP_HOST_URL,
-        pending: process.env.APP_HOST_URL,
+        success: `${APP_SCHEMA}://${BACK_URL.SUCCESS}`,
+        failure: `${APP_SCHEMA}://${BACK_URL.FAILURE}`,
+        pending: `${APP_SCHEMA}://${BACK_URL.PENDING}`,
       },
+      redirect_urls: {
+        failure: `${APP_SCHEMA}://${BACK_URL.FAILURE}`,
+        pending: `${APP_SCHEMA}://${BACK_URL.PENDING}`,
+        success: `${APP_SCHEMA}://${BACK_URL.SUCCESS}`,
+      },
+      auto_return: "approved",
       notificationUrl: `${process.env.APP_HOST_URL}/api/mp/payment-data`,
     },
   };
@@ -43,7 +50,6 @@ export const POST = async (request) => {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.log(`Error: ${error}`);
     throw error;
   }
 };
